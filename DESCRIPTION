@@ -1,0 +1,28 @@
+Package: SPT
+Title: Revised Sicegar Package
+Version: 0.0.0.9000
+Authors@R: 
+    person("Phineus", "Choi", , "pchm2023@mymail.pomona.edu", role = c("aut", "cre"))
+    person("Tommy", "Mathieus", , "thomasmatheis2024@gmail.com", role = c("aut", "cre"))
+    person("Sam", "Butler", , "swbe2022@mymail.pomona.edu", role = c("aut", "cre"))
+Description: SPT's functionality replicates that of the existing package Sicegar, revised to include optimizing improvements made, most notably the inclusion of the free estimation of the 'h0' lower asymptote parameter. 
+License: GPL-2 | GPL-3
+Imports:
+    minpack.lm,
+    fBasics,
+    ggplot2,
+    stats
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Config/testthat/edition: 3
+Suggests: 
+    covr,
+    cowplot,
+    testthat,
+    knitr,
+    rmarkdown,
+    dplyr,
+    tibble, 
+    devtools
+VignetteBuilder: knitr

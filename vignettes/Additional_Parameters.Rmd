@@ -1,0 +1,27 @@
+---
+title: "Additional_Parameters"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Additional_Parameters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# load all the in-development package code
+devtools::load_all("..") # once the package is published replace this with library(SPT)
+require(tibble)
+```
+
+Again, the changes made to the `parameterCalculation()` function in Sicegar has not changed its base functionality so we again reference you to their Additional_Parameters vignette which will detail the process of extracting additional information of interest about the fitted curves, such as the midpoint of the curve and the slope at the midpoint:
+
+```{r}
+vignette("additional_parameters", package = "sicegar")
+```

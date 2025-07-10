@@ -1,0 +1,28 @@
+---
+title: "Plotting"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plotting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# load all the in-development package code
+devtools::load_all("..") # once the package is published replace this with library(SPT)
+```
+
+Despite the changes we have made, functionally the plotting function 'figureModelCurves_spt' is the same as Sicegar's. Therefore we have decided to reference the user to Sicegar's vignette on walking through the plotting function: 
+
+```{r}
+vignette("plotting_fitted_models", package = "sicegar")
+```
+
+

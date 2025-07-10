@@ -1,0 +1,120 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# load all the in-development package code
+devtools::load_all("..") # once the package is published replace this with library(SPT)
+require(ggplot2)
+require(dplyr)
+require(cowplot)
+```
+
+The overarching aim of this package is to fit both a sigmoidal and a double-sigmoidal curve to time--intensity data and then determine which of the two models fit the data best. The sigmoidal model is assumed to start at a lower asymptotic value of h0 (changed from the original assumption of 0) and rise to an asymptotic value of h1. The double-sigmoidal model first increases from a lower asymptote of h0 to a maximum intensity of h1 and then decreases to a final asymptotic intensity of h2. After calculating the best candidate curves for both of models a decision algorithm determines which of the two candidates (if any) fits the data best. Finally, the package calculates key parameters that quantify the time--intensity data with respect to the best-fitting model. 
+
+For the sigmoidal model, key parameters describing the curve are: 
+
+* h0: The initial asymptotic intensity.
+* maximum: The maximum asymptotic intensity.
+* midpoint: The time point at which the sigmoidal curve reaches half of its maximum intensity.
+* slope: The slope of the curve at the midpoint.
+
+For the double-sigmoidal model, key parameters describing the curve are:
+
+* h0: The initial lower asymptotic intensity.
+* maximum: The maximum intensity the double-sigmoidal curve reaches.
+* final asymptotic intensity: The intensity the curve decreases to after having reached its maximum.
+* midpoint 1: The time point at which the double-sigmoidal curve reaches half of its maximum intensity during the initial rise.
+* slope 1: The slope at midpoint 1.
+* midpoint 2: The time point at which the double-sigmoidal curve reaches the intensity corresponding to the mean of the maximum intensity and the final asymptotic intensity.
+* slope 2: The slope at midpoint 2.
+
+Importantly, the parameters used to mathematically describe the fitted curves do not necessarily directly correspond to these intuitively meaningful parameters. Therefore, the **SPT** package calculates the intuitively meaningful parameters from the estimated parameters. See the vignette on additional parameters for details.
+
+
+##  Example fit on simulated input data
+
+The input to the fitting function must be in the form of a data frame with two columns called `time` and `intensity`. We will here use double-sigmoidal data generated with some arbitrarily chosen parameters. We can use the function `doubleSigmoidalFitFormula_spt()` to generate a double-sigmoidal curve, to which we add random noise. 
+
+```{r generate data for double - sigmoidal}
+set.seed(4747)
+reps <- 5
+time_raw <- rep(seq(0, 300, by = 50), each = reps)
+
+y_true <- doubleSigmoidalFitFormula_spt(
+  x                            = time_raw,
+  finalAsymptoteIntensityRatio = 0.5,
+  maximum                      = 480,
+  slope1Param                  = 0.04,
+  midPoint1Param               = 160,
+  slope2Param                  = 0.03,
+  midPointDistanceParam        = 80,
+  h0                           = 0
+)
+
+intensity_raw <- y_true + rnorm(length(y_true), sd = 100)
+dataInput <- tibble(time = time_raw, intensity = intensity_raw)
+
+ggplot(dataInput, aes(time, intensity)) + geom_point() + theme_bw()
+```
+
+We can now fit the two models to the data and determine which is the better fit. This is done with the function `SPT()`. The threshold parameters are used in the categorization process and depend on the units in which the data are measured. See the vignette on categorizing fits for details.
+
+```{r}
+fitObj <- SPT(dataInput, 
+              threshold_minimum_for_intensity_maximum = 0.3, 
+              threshold_intensity_range = 0.1)
+```
+The two fitted curves can be visualized with the function `figureModelCurves()`, which returns a **ggplot2** plot.
+
+```{r fig.height=4, fig.width=8}
+# Double-sigmoidal fit with parameter related lines
+fig_a <- figureModelCurves_spt(dataInput = fitObj$normalizedInput,
+                                  sigmoidalFitVector = fitObj$sigmoidalModel,
+                                  showParameterRelatedLines = TRUE)
+
+fig_b <- figureModelCurves_spt(dataInput = fitObj$normalizedInput,
+                                  doubleSigmoidalFitVector = fitObj$doubleSigmoidalModel,
+                                  showParameterRelatedLines = TRUE)
+
+plot_grid(fig_a, fig_b, ncol = 2) # function from the cowplot package
+```
+
+Clearly the regular sigmoidal curve does not provide a good fit but the double-sigmoidal curve does. This information is available from the returned fit object:
+```{r}
+fitObj$decisionProcess$decision # final decision
+```
+
+## The fit object
+
+The fit object returned by `fitAndCategorize()` contains all the information potentially of interest in the course of this type of an analysis. It consists of five distinct components:
+
+```{r}
+names(fitObj)
+```
+
+Each component holds numerous parameters of interest:
+
+* `.$normalizedInput`: The normalized dataset with normalization parameters, so that the raw dataset can be recovered from the normalized one. For more information, see the vignette on fitting individual models.
+* `.$sigmoidalModel`: The parameters for the sigmoidal fit. For more information, see the vignettes on fitting individual models and on additional parameters.
+* `.$doubleSigmoidalModel`: The parameters for the double-sigmoidal fit. For more information, see the vignettes on fitting individual models and on additional parameters.
+* `.$decisionProcess`: The results from the decision process of which of the two models fit the data better. For more information, see the vignette on categorizing fits.
+* `.$summaryVector`: Key parameters of the winning model. These are the most important parameters extracted from either `.$sigmoidalModel` or `.$doubleSigmoidalModel`.
+
+Here, the contents of the summary vector is as follows:
+```{r The results of the double_sigmoidal fit}
+str(fitObj$summaryVector)
+```
+All these parameters are defined in the vignette on additional parameters.
