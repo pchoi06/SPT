@@ -15,8 +15,8 @@
 #' intensity <- runif(length(time), 3.0, 7.5)
 #' dataInput <- data.frame(time, intensity)
 #'
-#' # Apply dataCheck_spt function
-#' dataOutputVariable <- dataCheck_spt(dataInput)
+#' # Apply dataCheck_h0 function
+#' dataOutputVariable <- dataCheck_h0(dataInput)
 #'
 #' # Example 2
 #'
@@ -26,13 +26,13 @@
 #' dataInput <- data.frame(time, intensity)
 #'
 #' # Normalize Data
-#' dataOutput <- normalizeData_spt(dataInput)
+#' dataOutput <- normalizeData_h0(dataInput)
 #' dataInput2 <- dataOutput
 #'
-#' # Apply dataCheck_spt function
-#' dataOutputVariable2 <- dataCheck_spt(dataInput2)
+#' # Apply dataCheck_h0 function
+#' dataOutputVariable2 <- dataCheck_h0(dataInput2)
 
-dataCheck_spt <- function(data, showDetails=TRUE){
+dataCheck_h0 <- function(data, showDetails=TRUE){
 
   isalist <- (is.list(data) & !is.data.frame(data))
 
@@ -124,7 +124,7 @@ dataCheck_spt <- function(data, showDetails=TRUE){
 #' @return Returns TRUE if models can from same source, FALSE otherwise.
 #' @export
 #'
-sameSourceDataCheck_spt <- function(dataInput,
+sameSourceDataCheck_h0 <- function(dataInput,
                                     sigmoidalFitVector,
                                     doubleSigmoidalFitVector){
 
@@ -132,36 +132,36 @@ sameSourceDataCheck_spt <- function(dataInput,
   # decide if data input is a data frame or a normalized data frame
   isalist <- (is.list(dataInput) & !is.data.frame(dataInput))
   if(isalist){
-    sameSourceDataCheck_spt.dataInput=dataInput$dataInputName
+    sameSourceDataCheck_h0.dataInput=dataInput$dataInputName
   }
   isadataframe <- (is.data.frame(dataInput))
   if(isadataframe){
-    sameSourceDataCheck_spt.dataInput <- NA
+    sameSourceDataCheck_h0.dataInput <- NA
   }
 
 
   # do the checks for sigmoidal fit vector
   # decide if sigmoidal fit is provided or not
   if(is.null(sigmoidalFitVector)){
-    sameSourceDataCheck_spt.sigmoidal <- NA
+    sameSourceDataCheck_h0.sigmoidal <- NA
   }
   if(!is.null(sigmoidalFitVector)){
-    sameSourceDataCheck_spt.sigmoidal <- sigmoidalFitVector$dataInputName
+    sameSourceDataCheck_h0.sigmoidal <- sigmoidalFitVector$dataInputName
   }
 
   # do the checks for double sigmoidal fit vector
   # decide if double sigmoidal fit is provided or not
   if(is.null(doubleSigmoidalFitVector)){
-    sameSourceDataCheck_spt.doublesigmoidal <- NA
+    sameSourceDataCheck_h0.doublesigmoidal <- NA
   }
   if(!is.null(doubleSigmoidalFitVector)){
-    sameSourceDataCheck_spt.doublesigmoidal <- doubleSigmoidalFitVector$dataInputName
+    sameSourceDataCheck_h0.doublesigmoidal <- doubleSigmoidalFitVector$dataInputName
   }
 
   # make decision
-  sameSourceDataCheckVector <- c(dataInput = sameSourceDataCheck_spt.dataInput,
-                                 sigmoidal = sameSourceDataCheck_spt.sigmoidal,
-                                 doublesigmoidal = sameSourceDataCheck_spt.doublesigmoidal)
+  sameSourceDataCheckVector <- c(dataInput = sameSourceDataCheck_h0.dataInput,
+                                 sigmoidal = sameSourceDataCheck_h0.sigmoidal,
+                                 doublesigmoidal = sameSourceDataCheck_h0.doublesigmoidal)
   sameSourceDataCheckVector <- sameSourceDataCheckVector[!is.na(sameSourceDataCheckVector)]
 
   if(length(sameSourceDataCheckVector) != 0){

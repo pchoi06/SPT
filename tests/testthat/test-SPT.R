@@ -3,7 +3,7 @@ test_that('SPT with double-sigmoidal input', {
   reps <- 5
   time_raw <- rep(seq(0, 300, by = 50), each = reps)
 
-  y_true <- doubleSigmoidalFitFormula_spt(
+  y_true <- doubleSigmoidalFitFormula_h0(
     x                            = time_raw,
     finalAsymptoteIntensityRatio = 0.5,
     maximum                      = 480,

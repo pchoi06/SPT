@@ -7,7 +7,7 @@
 #'
 #' @param dataInput A data frame (with columns `time` and `intensity`) or a list
 #'   containing `timeIntensityData` and optional `dataScalingParameters`.  See
-#'   \code{\link{dataCheck_spt}} for details.
+#'   \code{\link{dataCheck_h0}} for details.
 #' @param dataInputName Optional name to assign to the input dataset; used for
 #'   tracking/identification when fitting multiple curves.  Defaults to NA.
 #' @param model Character; either `"sigmoidal"` or `"doublesigmoidal"`, indicating
@@ -31,7 +31,7 @@
 #' @examples
 #' \dontrun{
 #' # single‐sigmoidal over noisy data, require at least 10 good fits
-#' res <- multipleFitFunction_spt(
+#' res <- multipleFitFunction_h0(
 #'   dataInput    = my_data,
 #'   model        = "sigmoidal",
 #'   n_runs_min   = 10,
@@ -41,10 +41,10 @@
 #' }
 #'
 #' @export
-multipleFitFunction_spt <- function (dataInput, dataInputName = NA, model, n_runs_min = 20,
+multipleFitFunction_h0 <- function (dataInput, dataInputName = NA, model, n_runs_min = 20,
                          n_runs_max = 500, showDetails = FALSE, ...)
 {
-  dataInputCheck <- dataCheck_spt(dataInput)
+  dataInputCheck <- dataCheck_h0(dataInput)
   if (!(model %in% c("sigmoidal", "doublesigmoidal"))) {
     stop("model should be one of sigmoidal, doublesigmoidal")
   }

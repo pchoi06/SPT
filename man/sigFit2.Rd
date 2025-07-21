@@ -37,6 +37,6 @@ A one‐row data.frame of estimates, fit‐statistics, and
 \code{h0_Estimate}.
 }
 \description{
-Fits \code{doubleSigmoidalFitFormula_spt()} to a \code{data.frame(time, intensity)}
+Fits \code{doubleSigmoidalFitFormula_h0()} to a \code{data.frame(time, intensity)}
 via \code{minpack.lm::nlsLM()}, appending h0 and AIC/BIC.
 }

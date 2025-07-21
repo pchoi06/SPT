@@ -42,21 +42,21 @@
 #'                      maximum=480, slopeParam=0.04, midPoint=160, h0=0)
 #'                         + rnorm(7,0,50))
 #'   fit <- SPT(dataInput = df)
-#'   figureModelCurves_spt(df, sigmoidalFitVector = fit$sigmoidalModel,
+#'   figureModelCurves_h0(df, sigmoidalFitVector = fit$sigmoidalModel,
 #'                         showParameterRelatedLines = TRUE)
 #' }
 #'
 #' @import ggplot2
 #' @export
-figureModelCurves_spt  <- function (dataInput, sigmoidalFitVector = NULL, doubleSigmoidalFitVector = NULL,
+figureModelCurves_h0  <- function (dataInput, sigmoidalFitVector = NULL, doubleSigmoidalFitVector = NULL,
                                   showParameterRelatedLines = FALSE, xlabelText = "time",
                                   ylabelText = "intensity", fittedXmin = 0, fittedXmax = NA)
 {
-  dataOutputVariable <- dataCheck_spt(dataInput)
-  sameSourceDataCheck_spt(dataInput, sigmoidalFitVector, doubleSigmoidalFitVector)
+  dataOutputVariable <- dataCheck_h0(dataInput)
+  sameSourceDataCheck_h0(dataInput, sigmoidalFitVector, doubleSigmoidalFitVector)
   isalist <- (is.list(dataInput) & !is.data.frame(dataInput))
   if (isalist) {
-    dataInput <- unnormalizeData_spt(dataInput)
+    dataInput <- unnormalizeData_h0(dataInput)
     dataFrameInput <- dataInput$timeIntensityData
   }
   isadataframe = (is.data.frame(dataInput))
@@ -97,7 +97,7 @@ figureModelCurves_spt  <- function (dataInput, sigmoidalFitVector = NULL, double
       }
       time <- seq(fittedXmin_sigmoidal, fittedXmax_sigmoidal,
                   fittedXmax_sigmoidal/1000)
-      intensityTheoreticalSigmoidal <- sigmoidalFitFormula_spt(time,
+      intensityTheoreticalSigmoidal <- sigmoidalFitFormula_h0(time,
                                                               maximum = maximum_y, slopeParam = slopeParam,
                                                               midPoint = midPoint_x, h0 = h0_est) # appended
       intensityTheoreticalSigmoidalDf <- data.frame(time,
@@ -151,7 +151,7 @@ figureModelCurves_spt  <- function (dataInput, sigmoidalFitVector = NULL, double
       }
       time <- seq(fittedXmin_doublesigmoidal, fittedXmax_doublesigmoidal,
                   fittedXmax_doublesigmoidal/1000)
-      intensityTheoreticalDoubleSigmoidal <- doubleSigmoidalFitFormula_spt(time,
+      intensityTheoreticalDoubleSigmoidal <- doubleSigmoidalFitFormula_h0(time,
                                                                     finalAsymptoteIntensityRatio = finalAsymptoteIntensityRatio,
                                                                     maximum = maximum_y, slope1Param = slope1Param,
                                                                     midPoint1Param = midPoint1Param, slope2Param = slope2Param,
@@ -168,7 +168,7 @@ figureModelCurves_spt  <- function (dataInput, sigmoidalFitVector = NULL, double
     if (sigmoidalFitVector$isThisaFit) {
       if (showParameterRelatedLines) {
         if (!sigmoidalFitVector$additionalParameters) {
-          stop("to show parameter related lines one needs to run parameterCalculation_spt for sigmoidalModel ")
+          stop("to show parameter related lines one needs to run parameterCalculation_h0 for sigmoidalModel ")
         }
         if (sigmoidalFitVector$additionalParameters) {
           output <- output + ggplot2::geom_hline(yintercept = 0,
@@ -199,7 +199,7 @@ figureModelCurves_spt  <- function (dataInput, sigmoidalFitVector = NULL, double
     if (doubleSigmoidalFitVector$isThisaFit) {
       if (showParameterRelatedLines) {
         if (!doubleSigmoidalFitVector$additionalParameters) {
-          stop("to show parameter related lines one needs to run parameterCalculation_spt for doubleSigmoidalModel ")
+          stop("to show parameter related lines one needs to run parameterCalculation_h0 for doubleSigmoidalModel ")
         }
         if (doubleSigmoidalFitVector$additionalParameters) {
           output <- output + ggplot2::geom_hline(yintercept = 0,

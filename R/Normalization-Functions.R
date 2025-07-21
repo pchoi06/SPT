@@ -17,11 +17,11 @@
 #'   \item{dataInputName}{the original \code{dataInputName} value.}
 #' @examples
 #' df <- data.frame(time = 0:10, intensity = rnorm(11, 5, 2))
-#' normalizeData_spt(df, dataInputName = "example")
+#' normalizeData_h0(df, dataInputName = "example")
 #' @export
-normalizeData_spt <- function (dataInput, dataInputName = NA)
+normalizeData_h0 <- function (dataInput, dataInputName = NA)
 {
-  dataInputCheckVariable <- dataCheck_spt(dataInput)
+  dataInputCheckVariable <- dataCheck_h0(dataInput)
   timeData <- dataInput$time
   timeRange <- max(timeData, na.rm = T)
   timeData <- timeData/timeRange
@@ -39,21 +39,21 @@ normalizeData_spt <- function (dataInput, dataInputName = NA)
 
 #' Unnormalize Time–Intensity Data
 #'
-#' Reverses the transformation applied by \code{\link{normalizeData_spt}},
+#' Reverses the transformation applied by \code{\link{normalizeData_h0}},
 #' restoring raw time and intensity values from scaled data.
 #'
-#' @param dataInput A list as returned by \code{\link{normalizeData_spt}},
+#' @param dataInput A list as returned by \code{\link{normalizeData_h0}},
 #'   containing \code{timeIntensityData} and \code{dataScalingParameters}.
 #' @return A list with component:
 #'   \item{timeIntensityData}{data.frame of original \code{time} and
 #'     \code{intensity} values.}
 #' @examples
-#' norm <- normalizeData_spt(data.frame(time=0:10, intensity=rnorm(11)))
-#' unnormalizeData_spt(norm)
+#' norm <- normalizeData_h0(data.frame(time=0:10, intensity=rnorm(11)))
+#' unnormalizeData_h0(norm)
 #' @export
-unnormalizeData_spt <- function (dataInput)
+unnormalizeData_h0 <- function (dataInput)
 {
-  dataInputCheckVariable <- dataCheck_spt(dataInput)
+  dataInputCheckVariable <- dataCheck_h0(dataInput)
   time <- dataInput$dataScalingParameters[["timeRange"]] *
     dataInput$timeIntensityData[["time"]]
   intensity <- dataInput$dataScalingParameters[["intensityMin"]] +

@@ -76,9 +76,9 @@ SPT <- function (dataInput, dataInputName = NA, n_runs_min_sm = 20,
                  threshold_AIC = -10, threshold_t0_max_int = 0.05, stepSize = 1e-05,
                  ...)
 {
-  normalizedInput = normalizeData_spt(dataInput = dataInput,
+  normalizedInput = normalizeData_h0(dataInput = dataInput,
                                            dataInputName = dataInputName)
-  preDecisionProcess = preCategorize_spt(normalizedInput = normalizedInput,
+  preDecisionProcess = preCategorize_h0(normalizedInput = normalizedInput,
                                               threshold_intensity_range = threshold_intensity_range,
                                               threshold_minimum_for_intensity_maximum = threshold_minimum_for_intensity_maximum)
   if (showDetails) {
@@ -98,23 +98,23 @@ SPT <- function (dataInput, dataInputName = NA, n_runs_min_sm = 20,
                 summaryVector = summaryVector))
   }
   if (preDecisionProcess$decision == "not_no_signal") {
-    sigmoidalModel <- multipleFitFunction_spt(dataInput = normalizedInput,
+    sigmoidalModel <- multipleFitFunction_h0(dataInput = normalizedInput,
                                   model = "sigmoidal", n_runs_min = n_runs_min_sm,
                                   n_runs_max = n_runs_max_sm, showDetails = showDetails,
                                   startList = startList_sm, lowerBounds = lowerBounds_sm,
                                   upperBounds = upperBounds_sm, min_Factor = min_Factor_sm,
                                   n_iterations = n_iterations_sm)
-    doubleSigmoidalModel <- multipleFitFunction_spt(dataInput = normalizedInput,
+    doubleSigmoidalModel <- multipleFitFunction_h0(dataInput = normalizedInput,
                                         model = "doublesigmoidal", n_runs_min = n_runs_min_dsm,
                                         n_runs_max = n_runs_max_dsm, showDetails = showDetails,
                                         startList = startList_dsm, lowerBounds = lowerBounds_dsm,
                                         upperBounds = upperBounds_dsm, min_Factor = min_Factor_dsm,
                                         n_iterations = n_iterations_dsm)
-    sigmoidalModel <- parameterCalculation_spt(parameterVector = sigmoidalModel,
+    sigmoidalModel <- parameterCalculation_h0(parameterVector = sigmoidalModel,
                                               stepSize = stepSize)
-    doubleSigmoidalModel <- parameterCalculation_spt(parameterVector = doubleSigmoidalModel,
+    doubleSigmoidalModel <- parameterCalculation_h0(parameterVector = doubleSigmoidalModel,
                                                     stepSize = stepSize)
-    decisionProcess <- Categorize_spt(parameterVectorSigmoidal = sigmoidalModel,
+    decisionProcess <- Categorize_h0(parameterVectorSigmoidal = sigmoidalModel,
                                      parameterVectorDoubleSigmoidal = doubleSigmoidalModel,
                                      threshold_intensity_range = threshold_intensity_range,
                                      threshold_minimum_for_intensity_maximum = threshold_minimum_for_intensity_maximum,

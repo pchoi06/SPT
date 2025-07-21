@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 devtools::load_all("..") # once the package is published replace this with library(SPT)
 ```
 
-Despite the changes we have made, functionally the plotting function 'figureModelCurves_spt' is the same as Sicegar's. Therefore we have decided to reference the user to Sicegar's vignette on walking through the plotting function: 
+Despite the changes we have made, functionally the plotting function 'figureModelCurves_h0' is the same as Sicegar's. Therefore we have decided to reference the user to Sicegar's vignette on walking through the plotting function: 
 
 ```{r}
 vignette("plotting_fitted_models", package = "sicegar")

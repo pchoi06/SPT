@@ -9,9 +9,9 @@
 #' @return Numeric vector of model‐predicted intensities.
 #' @examples
 #' time <- seq(0, 100, length.out = 50)
-#' y <- sigmoidalFitFormula_spt(time, maximum = 10, slopeParam = 0.1, midPoint = 50, h0 = 2)
+#' y <- sigmoidalFitFormula_h0(time, maximum = 10, slopeParam = 0.1, midPoint = 50, h0 = 2)
 #' @export
-sigmoidalFitFormula_spt <- function (x, maximum, slopeParam, midPoint, h0)
+sigmoidalFitFormula_h0 <- function (x, maximum, slopeParam, midPoint, h0)
 {
   y = (h0 + (maximum - h0)/(1 + exp((-slopeParam) * (x - midPoint))))
   return(y)
@@ -28,7 +28,7 @@ sigmoidalFitFormula_spt <- function (x, maximum, slopeParam, midPoint, h0)
 #'   \code{h0_Estimate}, \code{maximum_Estimate}, \code{slopeParam_Estimate},
 #'   and \code{midPoint_Estimate} on the original scale.
 #' @export
-sigmoidalRenormalizeParameters_spt <- function(parameterDF, isalist) {
+sigmoidalRenormalizeParameters_h0 <- function(parameterDF, isalist) {
   model         <- parameterDF$model
   dataInputName <- parameterDF$dataInputName
   if (isalist) {
@@ -148,7 +148,7 @@ sigFit <- function(
     parameterList$additionalParameters <- FALSE
 
     parameterDf <- as.data.frame(parameterList)
-    parameterDf <- sigmoidalRenormalizeParameters_spt(parameterDf, isalist)
+    parameterDf <- sigmoidalRenormalizeParameters_h0(parameterDf, isalist)
 
   } else {
     naNames <- c(
@@ -177,7 +177,7 @@ sigFit <- function(
     parameterList$model <- "sigmoidal"
 
     parameterDf <- as.data.frame(parameterList)
-    parameterDf <- sigmoidalRenormalizeParameters_spt(parameterDf, isalist)
+    parameterDf <- sigmoidalRenormalizeParameters_h0(parameterDf, isalist)
   }
 
   return(parameterDf)

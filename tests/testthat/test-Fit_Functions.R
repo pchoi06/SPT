@@ -1,6 +1,6 @@
 test_that("Sigmoidal Fit Function", {
   times <- c(0, 500, 1000)
-  sig <- sigmoidalFitFormula_spt(
+  sig <- sigmoidalFitFormula_h0(
     x          = times,
     maximum    = 750,
     slopeParam = 0.04,
@@ -16,7 +16,7 @@ test_that("Sigmoidal Fit Function", {
 test_that("Double-Sigmoidal Fit Function (long tail)", {
   times <- seq(0, 1000, by = 100)
 
-  dsig <- doubleSigmoidalFitFormula_spt(
+  dsig <- doubleSigmoidalFitFormula_h0(
     x                            = times,
     finalAsymptoteIntensityRatio = 0.5,
     maximum                      = 480,

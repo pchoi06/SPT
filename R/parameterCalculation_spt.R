@@ -1,4 +1,4 @@
-# parameterCalculation_spt Double Sigmoidal Helper Functions
+# parameterCalculation_h0 Double Sigmoidal Helper Functions
 #' @title Log‐transformed Double‐Sigmoidal Core Function
 #' @description Computes the log of the core double‐sigmoidal form used for
 #'   optimizing the peak time.  This function is internal to the SPT parameter
@@ -50,7 +50,7 @@ f0mid <- function (x, B1, M1, B2, L,const) {
 #'   }
 #' @return Numeric scalar: the time (in original units) of the curve’s peak.
 #' @keywords internal
-f_argmax_doublesigmoidal_spt <- function (parameterVector)
+f_argmax_doublesigmoidal_h0 <- function (parameterVector)
 {
   slope1Param <- parameterVector$slope1Param_N_Estimate
   slope2Param <- parameterVector$slope2Param_N_Estimate
@@ -101,7 +101,7 @@ f_argmax_doublesigmoidal_spt <- function (parameterVector)
 #' @return A numeric scalar giving the time of the first half-maximum point.
 #' @importFrom stats optimize uniroot
 #' @export
-f_mid1_doublesigmoidal_spt <- function (parameterDf)
+f_mid1_doublesigmoidal_h0 <- function (parameterDf)
 {
   max_x <- parameterDf$dataScalingParameters.timeRange
   xmax <- stats::optimize(f1, interval = c(-1.125 * max_x,
@@ -134,7 +134,7 @@ f_mid1_doublesigmoidal_spt <- function (parameterDf)
     }
   }
   if (inherits(mid1x, "try-error")) {
-    stop("f_mid1_doublesigmoidal_spt(): unable to find first half-max root with uniroot()")
+    stop("f_mid1_doublesigmoidal_h0(): unable to find first half-max root with uniroot()")
     }
   return(mid1x$root)
 }
@@ -148,11 +148,11 @@ f_mid1_doublesigmoidal_spt <- function (parameterDf)
 #' over the interval from the peak to beyond the original time range.
 #'
 #' @param parameterDf A data.frame or list containing the same fields as
-#'   \code{f_mid1_doublesigmoidal_spt()}, including \code{dataScalingParameters.timeRange}.
+#'   \code{f_mid1_doublesigmoidal_h0()}, including \code{dataScalingParameters.timeRange}.
 #' @return A numeric scalar giving the time of the second half-maximum point.
 #' @importFrom stats optimize uniroot
 #' @export
-f_mid2_doublesigmoidal_spt <- function (parameterDf)
+f_mid2_doublesigmoidal_h0 <- function (parameterDf)
 {
   max_x <- parameterDf$dataScalingParameters.timeRange
   xmax <- stats::optimize(f1, interval = c(-1.125 * max_x,
@@ -184,7 +184,7 @@ f_mid2_doublesigmoidal_spt <- function (parameterDf)
     }
   }
   if (inherits(mid2x, "try-error")) {
-    stop("f_mid2_doublesigmoidal_spt(): unable to find second half-max root with uniroot()")
+    stop("f_mid2_doublesigmoidal_h0(): unable to find second half-max root with uniroot()")
     }
   return(mid2x$root)
 }
@@ -208,22 +208,22 @@ f_mid2_doublesigmoidal_spt <- function (parameterDf)
 #' @param timeStep Numeric; small increment used for finite differences. Default 1e-05.
 #' @return Numeric scalar: approximate slope (dY/dX) at \code{x}.
 #' @keywords internal
-f_slope_doublesigmoidal_spt <- function (x, parameterDf, timeStep = 1e-05)
+f_slope_doublesigmoidal_h0 <- function (x, parameterDf, timeStep = 1e-05)
 {
-  fxp2h <- doubleSigmoidalFitFormula_spt(x = x + 2 * timeStep,
+  fxp2h <- doubleSigmoidalFitFormula_h0(x = x + 2 * timeStep,
                                   finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
                                   maximum = parameterDf$maximum_Estimate, slope1Param = parameterDf$slope1Param_Estimate,
                                   midPoint1Param = parameterDf$midPoint1Param_Estimate,
                                   slope2Param = parameterDf$slope2Param_Estimate, midPointDistanceParam = parameterDf$midPointDistanceParam_Estimate, h0 = parameterDf$h0_Estimate)
-  fxph <- doubleSigmoidalFitFormula_spt(x = x + timeStep, finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
+  fxph <- doubleSigmoidalFitFormula_h0(x = x + timeStep, finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
                                  maximum = parameterDf$maximum_Estimate, slope1Param = parameterDf$slope1Param_Estimate,
                                  midPoint1Param = parameterDf$midPoint1Param_Estimate,
                                  slope2Param = parameterDf$slope2Param_Estimate, midPointDistanceParam = parameterDf$midPointDistanceParam_Estimate, h0 = parameterDf$h0_Estimate)
-  fxmh <- doubleSigmoidalFitFormula_spt(x = x - timeStep, finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
+  fxmh <- doubleSigmoidalFitFormula_h0(x = x - timeStep, finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
                                  maximum = parameterDf$maximum_Estimate, slope1Param = parameterDf$slope1Param_Estimate,
                                  midPoint1Param = parameterDf$midPoint1Param_Estimate,
                                  slope2Param = parameterDf$slope2Param_Estimate, midPointDistanceParam = parameterDf$midPointDistanceParam_Estimate, h0 = parameterDf$h0_Estimate)
-  fxm2h <- doubleSigmoidalFitFormula_spt(x = x - 2 * timeStep,
+  fxm2h <- doubleSigmoidalFitFormula_h0(x = x - 2 * timeStep,
                                   finalAsymptoteIntensityRatio = parameterDf$finalAsymptoteIntensityRatio_Estimate,
                                   maximum = parameterDf$maximum_Estimate, slope1Param = parameterDf$slope1Param_Estimate,
                                   midPoint1Param = parameterDf$midPoint1Param_Estimate,
@@ -254,7 +254,7 @@ f_slope_doublesigmoidal_spt <- function (x, parameterDf, timeStep = 1e-05)
 #'   for double‐sigmoidal: \code{maximum_x}, \code{midPoint1_x}, \code{slope1},
 #'   \code{finalAsymptoteIntensity}, etc.
 #' @export
-parameterCalculation_spt <- function (parameterVector, stepSize = 1e-05)
+parameterCalculation_h0 <- function (parameterVector, stepSize = 1e-05)
 {
   if (parameterVector$model == "sigmoidal") {
     parameterVector$maximum_x <- NA
@@ -274,27 +274,27 @@ parameterCalculation_spt <- function (parameterVector, stepSize = 1e-05)
     parameterVector$additionalParameters <- TRUE
   }
   if (parameterVector$model == "doublesigmoidal") {
-    parameterVector$maximum_x <- f_argmax_doublesigmoidal_spt(parameterVector)
+    parameterVector$maximum_x <- f_argmax_doublesigmoidal_h0(parameterVector)
     parameterVector$maximum_y <- parameterVector$maximum_Estimate
-    parameterVector$midPoint1_x <- f_mid1_doublesigmoidal_spt(parameterVector)
-    parameterVector$midPoint1_y <- doubleSigmoidalFitFormula_spt(x = parameterVector$midPoint1_x,
+    parameterVector$midPoint1_x <- f_mid1_doublesigmoidal_h0(parameterVector)
+    parameterVector$midPoint1_y <- doubleSigmoidalFitFormula_h0(x = parameterVector$midPoint1_x,
                                                           finalAsymptoteIntensityRatio = parameterVector$finalAsymptoteIntensityRatio_Estimate,
                                                           maximum = parameterVector$maximum_y, slope1Param = parameterVector$slope1Param_Estimate,
                                                           midPoint1Param = parameterVector$midPoint1Param_Estimate,
                                                           slope2Param = parameterVector$slope2Param_Estimate,
                                                           midPointDistanceParam = parameterVector$midPointDistanceParam_Estimate,
                                                           h0 = parameterVector$h0_Estimate)
-    parameterVector$midPoint2_x <- f_mid2_doublesigmoidal_spt(parameterVector)
-    parameterVector$midPoint2_y <- doubleSigmoidalFitFormula_spt(x = parameterVector$midPoint2_x,
+    parameterVector$midPoint2_x <- f_mid2_doublesigmoidal_h0(parameterVector)
+    parameterVector$midPoint2_y <- doubleSigmoidalFitFormula_h0(x = parameterVector$midPoint2_x,
                                                           finalAsymptoteIntensityRatio = parameterVector$finalAsymptoteIntensityRatio_Estimate,
                                                           maximum = parameterVector$maximum_y, slope1Param = parameterVector$slope1Param_Estimate,
                                                           midPoint1Param = parameterVector$midPoint1Param_Estimate,
                                                           slope2Param = parameterVector$slope2Param_Estimate,
                                                           midPointDistanceParam = parameterVector$midPointDistanceParam_Estimate,
                                                           h0 = parameterVector$h0_Estimate)
-    parameterVector$slope1 <- f_slope_doublesigmoidal_spt(parameterVector$midPoint1_x, # changed
+    parameterVector$slope1 <- f_slope_doublesigmoidal_h0(parameterVector$midPoint1_x, # changed
                                                          parameterVector, timeStep = stepSize)
-    parameterVector$slope2 <- f_slope_doublesigmoidal_spt(parameterVector$midPoint2_x, # changed
+    parameterVector$slope2 <- f_slope_doublesigmoidal_h0(parameterVector$midPoint2_x, # changed
                                                          parameterVector, timeStep = stepSize)
     parameterVector$finalAsymptoteIntensity <- parameterVector$finalAsymptoteIntensityRatio_Estimate *
       parameterVector$maximum_y

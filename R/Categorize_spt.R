@@ -4,7 +4,7 @@
 #' decide whether there is any signal worth fitting, based on intensity
 #' range and maximum thresholds.
 #'
-#' @param normalizedInput A list returned by \code{\link{normalizeData_spt}},
+#' @param normalizedInput A list returned by \code{\link{normalizeData_h0}},
 #'   containing at least the fields:
 #'   \describe{
 #'     \item{\code{dataInputName}}{Original name of the data input.}
@@ -34,7 +34,7 @@
 #'   }
 #'
 #' @export
-preCategorize_spt <- function (normalizedInput, threshold_intensity_range = 0.1,
+preCategorize_h0 <- function (normalizedInput, threshold_intensity_range = 0.1,
           threshold_minimum_for_intensity_maximum = 0.3)
 {
   decisionList <- list()
@@ -74,10 +74,10 @@ preCategorize_spt <- function (normalizedInput, threshold_intensity_range = 0.1,
 #'
 #' @param parameterVectorSigmoidal A named list or data frame of sigmoidal fit parameters,
 #'   produced by \code{\link{sigFit}} and
-#'   \code{\link{parameterCalculation_spt}}.
+#'   \code{\link{parameterCalculation_h0}}.
 #' @param parameterVectorDoubleSigmoidal A named list or data.frame of double-sigmoidal fit
 #'   parameters, produced by \code{\link{sigFit2}} and
-#'   \code{\link{parameterCalculation_spt}}.
+#'   \code{\link{parameterCalculation_h0}}.
 #' @param threshold_intensity_range Numeric; minimum required intensity range to consider
 #'   any signal (default 0.1).
 #' @param threshold_minimum_for_intensity_maximum Numeric; minimum maximum intensity
@@ -100,7 +100,7 @@ preCategorize_spt <- function (normalizedInput, threshold_intensity_range = 0.1,
 #'   \item{decisonSteps}{Which numbered tests were applied (as a single string).}
 #'
 #' @export
-Categorize_spt <- function (parameterVectorSigmoidal, parameterVectorDoubleSigmoidal,
+Categorize_h0 <- function (parameterVectorSigmoidal, parameterVectorDoubleSigmoidal,
                            threshold_intensity_range = 0.1, threshold_minimum_for_intensity_maximum = 0.3,
                            threshold_bonus_sigmoidal_AIC = 0, threshold_sm_tmax_IntensityRatio = 0.85,
                            threshold_dsm_tmax_IntensityRatio = 0.75, threshold_AIC = -10,
@@ -162,14 +162,14 @@ Categorize_spt <- function (parameterVectorSigmoidal, parameterVectorDoubleSigmo
   decisionList$timeRange <- timeRange
   decisionList$test.dsm_maximum_x <- decisionList$dsm_maximum_x <
     timeRange
-  sm_intensity_at_tmax <- sigmoidalFitFormula_spt(x = timeRange,
+  sm_intensity_at_tmax <- sigmoidalFitFormula_h0(x = timeRange,
                                                  maximum = parameterVectorSigmoidal$maximum_y, slopeParam = parameterVectorSigmoidal$slopeParam_Estimate,
                                                  midPoint = parameterVectorSigmoidal$midPoint_Estimate, h0 = parameterVectorSigmoidal$h0_Estimate) # changed but dont know if it works yet
   decisionList$sm_tmax_IntensityRatio <- sm_intensity_at_tmax/parameterVectorSigmoidal$maximum_y
   decisionList$threshold_sm_tmax_IntensityRatio <- threshold_sm_tmax_IntensityRatio
   decisionList$test.sm_tmax_IntensityRatio <- decisionList$sm_tmax_IntensityRatio >
     threshold_dsm_tmax_IntensityRatio
-  dsm_intensity_at_tmax <- doubleSigmoidalFitFormula_spt(x = timeRange,
+  dsm_intensity_at_tmax <- doubleSigmoidalFitFormula_h0(x = timeRange,
                                                   finalAsymptoteIntensityRatio = parameterVectorDoubleSigmoidal$finalAsymptoteIntensityRatio_Estimate,
                                                   maximum = parameterVectorDoubleSigmoidal$maximum_y,
                                                   slope1Param = parameterVectorDoubleSigmoidal$slope1Param_Estimate,
@@ -187,13 +187,13 @@ Categorize_spt <- function (parameterVectorSigmoidal, parameterVectorDoubleSigmo
   decisionList$dsm_startPoint_x <- parameterVectorDoubleSigmoidal$startPoint_x
   decisionList$test.dsm_startPoint_x <- parameterVectorDoubleSigmoidal$startPoint_x >
     0
-  decisionList$sm_startIntensity <- sigmoidalFitFormula_spt(x = 0,
+  decisionList$sm_startIntensity <- sigmoidalFitFormula_h0(x = 0,
                                                            maximum = parameterVectorSigmoidal$maximum_y, slopeParam = parameterVectorSigmoidal$slopeParam_Estimate,
                                                            midPoint = parameterVectorSigmoidal$midPoint_Estimate, h0 = parameterVectorSigmoidal$h0_Estimate)    # changed but don't know if it works yet
   decisionList$threshold_t0_max_int <- threshold_t0_max_int
   decisionList$test.sm_startIntensity <- decisionList$sm_startIntensity <
     threshold_t0_max_int
-  decisionList$dsm_startIntensity <- doubleSigmoidalFitFormula_spt(x = 0,
+  decisionList$dsm_startIntensity <- doubleSigmoidalFitFormula_h0(x = 0,
                                                             finalAsymptoteIntensityRatio = parameterVectorDoubleSigmoidal$finalAsymptoteIntensityRatio_Estimate,
                                                             maximum = parameterVectorDoubleSigmoidal$maximum_y,
                                                             slope1Param = parameterVectorDoubleSigmoidal$slope1Param_Estimate,

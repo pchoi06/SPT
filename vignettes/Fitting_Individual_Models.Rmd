@@ -30,7 +30,7 @@ We will demonstrate the use of this function on double-sigmoidal data, generated
 set.seed(4747)
 time_raw <- seq(0, 300, by = 50)
 
-y_true <- doubleSigmoidalFitFormula_spt(
+y_true <- doubleSigmoidalFitFormula_h0(
   x                            = time_raw,
   finalAsymptoteIntensityRatio = 0.5,
   maximum                      = 480,
@@ -49,7 +49,7 @@ head(dataInput) # the generated input data
 
 Before we can perform the fit, we need to normalize the data appropriately. All **SPT** fit functions work on normalized data, where time and intensity are normalized to the interval from 0 to 1. Sicegar provides a convenient normalization function `normalizeData()` that normalizes data appropriately while storing the required information to transform fitted parameters back into non-normalized coordinates:
 ```{r normalize_data}
-normalizedInput <- normalizeData_spt(dataInput = dataInput, 
+normalizedInput <- normalizeData_h0(dataInput = dataInput, 
                                  dataInputName = "doubleSigmoidalSample")
 head(normalizedInput$timeIntensityData) # the normalized time and intensity data
 ```
@@ -60,7 +60,7 @@ normalizedInput$dataScalingParameters # scaling parameters
 normalizedInput$dataInputName # data input name
 ```
 
-Note that `normalizeData_spt()` normalizes time with respect to the maximum value the time parameter takes:
+Note that `normalizeData_h0()` normalizes time with respect to the maximum value the time parameter takes:
 ```{r time normalization, eval=FALSE}
 timeRange <- time
 timeNormalized <- time/timeRange # normalized time values
@@ -80,12 +80,12 @@ intensityNormalized <- (intensity-intensityMin)/intensityRange # normalized inte
 To fit a model to the data using the function `multipleFitFunction()`, we provide it as input the normalized data and the model type to be fitted, which can be `"sigmoidal"` or `"doublesigmoidal"`. Here we are fitting both models to the same input data:
 ```{r}
 # Do the sigmoidal fit
-sigmoidalModel <- multipleFitFunction_spt(dataInput=normalizedInput,
+sigmoidalModel <- multipleFitFunction_h0(dataInput=normalizedInput,
                                       model="sigmoidal")
 
 
 # Do the double-sigmoidal fit
-doubleSigmoidalModel <- multipleFitFunction_spt(dataInput=normalizedInput,
+doubleSigmoidalModel <- multipleFitFunction_h0(dataInput=normalizedInput,
                                             model="doublesigmoidal")
 ```
 

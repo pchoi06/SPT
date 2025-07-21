@@ -31,7 +31,7 @@ f0 <- function (x, B1, M1, B2, L) #unchanged
 #' @param h0       Baseline intensity.
 #' @return Numeric vector of same length as `x`.
 #' @keywords internal
-f2_spt <- function (x, A2, Ka, B1, M1, B2, L, const, argument, h0)
+f2_h0 <- function (x, A2, Ka, B1, M1, B2, L, const, argument, h0)
 {
   fBasics::Heaviside(x - argument) * (f0(x, B1, M1, B2, L) * ((Ka - A2 * Ka)/(const)) + A2 * Ka) +
     (1 - fBasics::Heaviside(x - argument)) * (f0(x, B1, M1, B2, L) * ((Ka - h0)/(const)) + h0)
@@ -60,8 +60,8 @@ f2_spt <- function (x, A2, Ka, B1, M1, B2, L, const, argument, h0)
 #'   dataScalingParameters.intensityRange = 10,
 #'   dataScalingParameters.intensityMin = 0
 #' )
-#' renormalizeParameters_spt(df, isalist=TRUE)
-renormalizeParameters_spt <- function(parameterDF, isalist) {
+#' renormalizeParameters_h0(df, isalist=TRUE)
+renormalizeParameters_h0 <- function(parameterDF, isalist) {
   model         <- parameterDF$model
   dataInputName <- parameterDF$dataInputName
   if (isalist) {
@@ -129,7 +129,7 @@ renormalizeParameters_spt <- function(parameterDF, isalist) {
 #' @param h0                        Baseline at x = 0.
 #' @return Numeric vector of same length as `x`.
 #' @export
-doubleSigmoidalFitFormula_spt <- function (x, finalAsymptoteIntensityRatio, maximum, slope1Param,
+doubleSigmoidalFitFormula_h0 <- function (x, finalAsymptoteIntensityRatio, maximum, slope1Param,
                                     midPoint1Param, slope2Param, midPointDistanceParam, h0)
 {
   if (slope1Param < 0) {
@@ -163,7 +163,7 @@ doubleSigmoidalFitFormula_spt <- function (x, finalAsymptoteIntensityRatio, maxi
   argumentt <- xmax$maximum
   constt <- f0(argumentt, slope1Param, midPoint1Param, slope2Param,
                midPointDistanceParam)
-  y <- f2_spt(x, finalAsymptoteIntensityRatio, maximum, slope1Param,
+  y <- f2_h0(x, finalAsymptoteIntensityRatio, maximum, slope1Param,
               midPoint1Param, slope2Param, midPointDistanceParam,
               constt, argumentt, h0)
   return(y)
@@ -171,7 +171,7 @@ doubleSigmoidalFitFormula_spt <- function (x, finalAsymptoteIntensityRatio, maxi
 
 #' Double‐sigmoidal NLS fit (with baseline h0)
 #'
-#' Fits `doubleSigmoidalFitFormula_spt()` to a `data.frame(time, intensity)`
+#' Fits `doubleSigmoidalFitFormula_h0()` to a `data.frame(time, intensity)`
 #' via `minpack.lm::nlsLM()`, appending h0 and AIC/BIC.
 #'
 #' @param dataInput      data.frame or list with `$timeIntensityData`.
@@ -241,7 +241,7 @@ sigFit2 <- function (
 
   theFitResult <- try(
     minpack.lm::nlsLM(
-      intensity ~ doubleSigmoidalFitFormula_spt(
+      intensity ~ doubleSigmoidalFitFormula_h0(
         time,
         finalAsymptoteIntensityRatio,
         maximum,
@@ -290,7 +290,7 @@ sigFit2 <- function (
     parameterList$model <- "doublesigmoidal"
     parameterList$additionalParameters <- FALSE
     parameterDf <- as.data.frame(parameterList)
-    parameterDf <- renormalizeParameters_spt(parameterDf, isalist)
+    parameterDf <- renormalizeParameters_h0(parameterDf, isalist)
   } else {
     parameterVector <- rep(NA, 24 + 4)
     names(parameterVector) <- c(
@@ -316,7 +316,7 @@ sigFit2 <- function (
     if (isalist) parameterList$dataScalingParameters <- as.list(dataInput$dataScalingParameters)
     parameterList$model <- "doublesigmoidal"
     parameterDf <- as.data.frame(parameterList)
-    parameterDf <- renormalizeParameters_spt(parameterDf, isalist)
+    parameterDf <- renormalizeParameters_h0(parameterDf, isalist)
   }
 
   return(parameterDf)  # unchanged
